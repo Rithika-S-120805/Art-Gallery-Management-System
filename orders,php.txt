@@ -1,0 +1,28 @@
+<?php
+include 'db.php';
+session_start();
+
+if (!isset($_SESSION['user_id'])) {
+    die("Please <a href='login.php'>login</a> to continue.");
+}
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $user_id = $_SESSION['user_id'];
+    $artwork_id = $_POST['artwork_id'];
+    $quantity = $_POST['quantity'];
+
+    $conn->begin_transaction();
+
+    try {
+        $stmt = $conn->prepare("INSERT INTO orders (user_id, artwork_id, quantity) VALUES (?, ?, ?)");
+        $stmt->bind_param("iii", $user_id, $artwork_id, $quantity);
+        $stmt->execute();
+
+        $conn->commit();
+        echo "Order placed successfully!";
+    } catch (Exception $e) {
+        $conn->rollback();
+        echo "Error: " . $e->getMessage();
+    }
+}
+?>

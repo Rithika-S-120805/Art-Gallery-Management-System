@@ -1,0 +1,2 @@
+Raw Input: artwork_id=130&artwork_title=Dove&artwork_price=12%2C000.00
+Decoded: 
